@@ -38,11 +38,12 @@ public class RandomLocation {
             BetterRTP.getInstance().getLogger().warning("Max: " + rtpWorld.getMaxRadius() + " Min: " + rtpWorld.getMinRadius());
             return null;
         }
+        // Generate a random X and Z based off the radius. No quadrants voodoo.
         Random random = new Random();
-        // Generate a random X and Z based off the radius. Just one line. No quadrants voodoo.
-        int x = random.nextInt(radius_max), z = (x > radius_min) ? random.nextInt(radius_max) : radius_min + random.nextInt(radius_max - radius_min);
-        x += rtpWorld.getCenterX();
-        z += rtpWorld.getCenterZ();
+        int x = random.nextInt(radius_max * 2) - radius_max;
+        int z = (Math.abs(x) >= radius_min)
+            ? random.nextInt(radius_max * 2) - radius_max
+            : (random.nextBoolean() ? 1 : -1) * (radius_min + random.nextInt(radius_max - radius_min));
         return new Location(rtpWorld.getWorld(), x, 69, z);
     }
 
