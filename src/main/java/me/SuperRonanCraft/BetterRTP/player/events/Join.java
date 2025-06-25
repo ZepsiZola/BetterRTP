@@ -5,12 +5,15 @@ import me.SuperRonanCraft.BetterRTP.player.rtp.RTP_TYPE;
 import me.SuperRonanCraft.BetterRTP.references.PermissionNode;
 import me.SuperRonanCraft.BetterRTP.references.file.FileOther;
 import me.SuperRonanCraft.BetterRTP.references.messages.Message_RTP;
+import me.SuperRonanCraft.BetterRTP.references.messages.MessagesCore;
 import me.SuperRonanCraft.BetterRTP.references.web.Updater;
 import me.SuperRonanCraft.BetterRTP.references.helpers.HelperRTP;
 import me.SuperRonanCraft.BetterRTP.versions.AsyncHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
+
+import java.util.Arrays;
 
 public class Join {
 
@@ -25,16 +28,24 @@ public class Join {
 
     //Updater
     private static void updater(Player p) {
-        if (!getPl().getFiles().getType(FileOther.FILETYPE.CONFIG).getBoolean("Settings.DisableUpdater") && PermissionNode.UPDATER.check(p))
-            if (!getPl().getDescription().getVersion().equals(Updater.updatedVersion))
-                Message_RTP.sms(p, "&7There is currently an update for &6BetterRTP &7version &e#" +
-                        Updater.updatedVersion + " &7you have version &e#" + getPl().getDescription().getVersion());
+        if (!getPl().getFiles().getType(FileOther.FILETYPE.CONFIG).getBoolean("Settings.DisableUpdater") && PermissionNode.UPDATER.check(p)) {
+            if (!getPl().getDescription().getVersion().equals(Updater.updatedVersion)) {
+                String currentVersion = getPl().getDescription().getVersion();
+                String newVersion = Updater.updatedVersion;
+
+                MessagesCore.UPDATE.send(p, Arrays.asList(currentVersion, newVersion));
+            }
+        }
     }
+
 
     //RTP on first join
     private static void rtpOnFirstJoin(Player p) {
         if (getPl().getSettings().isRtpOnFirstJoin_Enabled() && !p.hasPlayedBefore())
-            HelperRTP.tp(p, Bukkit.getConsoleSender(), Bukkit.getWorld(getPl().getSettings().getRtpOnFirstJoin_World()), null, RTP_TYPE.JOIN); //Console is sender to override delays
+            HelperRTP.tp(p, Bukkit.getConsoleSender(),
+                    Bukkit.getWorld(getPl().getSettings().getRtpOnFirstJoin_World()),
+                    null, RTP_TYPE.JOIN, true, true);
+        //Fixed via @kazigk on Github
     }
 
     private static BetterRTP getPl() {
