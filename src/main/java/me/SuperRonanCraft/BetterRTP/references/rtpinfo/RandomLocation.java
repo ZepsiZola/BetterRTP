@@ -30,7 +30,7 @@ public class RandomLocation {
         int radius_max = rtpWorld.getMaxRadius();
         try {
             if (radius_min < 0 || radius_max < 0) {
-                throw new IllegalArgumentException(); //If the radius is negative or it takes too long to find location, throw an exception
+                throw new IllegalArgumentException(); // If MinRadius or MaxRadius is negative, throw an exception
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
