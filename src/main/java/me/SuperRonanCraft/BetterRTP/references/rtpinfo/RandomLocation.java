@@ -26,28 +26,15 @@ public class RandomLocation {
 
     private static Location generateSquare(RTPWorld rtpWorld) {
         //Generate a random X and Z based off the quadrant selected
-        int min = rtpWorld.getMinRadius();
-        int max = rtpWorld.getMaxRadius() - min;
+        int radius_min = rtpWorld.getMinRadius();
+        int radius_max = rtpWorld.getMaxRadius();
         int x, z;
-        int quadrant = new Random().nextInt(4);
+        boolean found = false;
         try {
-            switch (quadrant) {
-                case 0: // Positive X and Z
-                    x = new Random().nextInt(max) + min;
-                    z = new Random().nextInt(max) + min;
-                    break;
-                case 1: // Negative X and Z
-                    x = -new Random().nextInt(max) - min;
-                    z = -(new Random().nextInt(max) + min);
-                    break;
-                case 2: // Negative X and Positive Z
-                    x = -new Random().nextInt(max) - min;
-                    z = new Random().nextInt(max) + min;
-                    break;
-                default: // Positive X and Negative Z
-                    x = new Random().nextInt(max) + min;
-                    z = -(new Random().nextInt(max) + min);
-                    break;
+            while (found == false) {
+                x = new Random().nextInt(radius_max);
+                z = new Random().nextInt(radius_max);
+                found = ((Math.abs(x)>=radius_min || Math.abs(z)>=radius_min) && (Math.abs(x) <= radius_max && Math.abs(z) <= radius_max));
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -57,7 +44,6 @@ public class RandomLocation {
         }
         x += rtpWorld.getCenterX();
         z += rtpWorld.getCenterZ();
-        //System.out.println(quadrant);
         return new Location(rtpWorld.getWorld(), x, 69, z);
     }
 
