@@ -44,6 +44,8 @@ public class RandomLocation {
         int z = (Math.abs(x) >= radius_min)
             ? random.nextInt(radius_max * 2) - radius_max
             : (random.nextBoolean() ? 1 : -1) * (radius_min + random.nextInt(radius_max - radius_min));
+        x += rtpWorld.getCenterX();
+        z += rtpWorld.getCenterZ();
         return new Location(rtpWorld.getWorld(), x, 69, z);
     }
 
