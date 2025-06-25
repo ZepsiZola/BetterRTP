@@ -25,30 +25,29 @@ public class RandomLocation {
     }
 
     private static Location generateSquare(RTPWorld rtpWorld) {
-        //Generate a random X and Z based off the quadrant selected
+        // Return a Location where a random X and Z are within the bounds defined by MinRadius and MaxRadius
         int radius_min = rtpWorld.getMinRadius();
         int radius_max = rtpWorld.getMaxRadius();
-        int x, z;
-        boolean found = false;
         try {
-            while (found == false) {
-                x = new Random().nextInt(radius_max);
-                z = new Random().nextInt(radius_max);
-                found = ((Math.abs(x)>=radius_min || Math.abs(z)>=radius_min) && (Math.abs(x) <= radius_max && Math.abs(z) <= radius_max));
+            if (radius_min < 0 || radius_max < 0) {
+                throw new IllegalArgumentException(); //If the radius is negative or it takes too long to find location, throw an exception
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            BetterRTP.getInstance().getLogger().warning("A bounding location was negative! Please check your config only has positive x/z for max/min radius!");
+            BetterRTP.getInstance().getLogger().warning("Incorrect configuration! Check your config and confirm that MinRadius is smaller than MaxRadius and that they are both positive numbers!");
             BetterRTP.getInstance().getLogger().warning("Max: " + rtpWorld.getMaxRadius() + " Min: " + rtpWorld.getMinRadius());
             return null;
         }
+        Random random = new Random();
+        // Generate a random X and Z based off the radius. Just one line. No quadrants voodoo.
+        int x = random.nextInt(radius_max), z = (x > radius_min) ? random.nextInt(radius_max) : radius_min + random.nextInt(radius_max - radius_min);
         x += rtpWorld.getCenterX();
         z += rtpWorld.getCenterZ();
         return new Location(rtpWorld.getWorld(), x, 69, z);
     }
 
     private static Location generateRound(RTPWorld rtpWorld) {
-        //Generate a random X and Z based off location on a spiral curve
+        // Return a random X and Z based off location on a spiral curve
         int min = rtpWorld.getMinRadius();
         int max = rtpWorld.getMaxRadius() - min;
         int x, z;
