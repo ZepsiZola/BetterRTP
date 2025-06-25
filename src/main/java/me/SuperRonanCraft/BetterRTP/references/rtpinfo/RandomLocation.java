@@ -29,7 +29,7 @@ public class RandomLocation {
         int radius_min = rtpWorld.getMinRadius();
         int radius_max = rtpWorld.getMaxRadius();
         try {
-            if (radius_min < 0 || radius_max < 0) {
+            if (radius_min < 0 || radius_max < 0 || radius_min >= radius_max) {
                 throw new IllegalArgumentException(); // If MinRadius or MaxRadius is negative, throw an exception
             }
         } catch (IllegalArgumentException e) {
